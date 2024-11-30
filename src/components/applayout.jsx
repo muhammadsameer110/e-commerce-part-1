@@ -1,5 +1,3 @@
-
-
 import React from 'react';
 import PropTypes from 'prop-types';
 import AppBar from '@mui/material/AppBar';
@@ -16,54 +14,12 @@ import MenuIcon from '@mui/icons-material/Menu';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
-import PRodect1 from "../images/product-img-1.jpg"
-import PRodect2 from "../images/product-img-2.jpg"
-import PRodect3 from "../images/product-img-3.jpg"
-import PRodect4 from "../images/product-img-4.jpg"
-import { Card, Rating } from '@mui/material';
-import AddIcon from '@mui/icons-material/Add';
+import Menu from '@mui/material/Menu';
+import MenuItem from '@mui/material/MenuItem';
+import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import 'bootstrap/dist/css/bootstrap.min.css';
-
-
-const prodectData = [
-  {
-    id: 1,
-    name: "Haldiram's Sev Bhujia",
-    category: "Snack & Munchies",
-    image: PRodect1,
-    price: "18",
-    rating: "3",
-
-  },
-  {
-    id: 2,
-    name: "NutriChoice Digestive",
-    category: "Bakery & Biscuits",
-    image: PRodect2,
-    price: "20",
-    rating: "2",
-
-  },
-  {
-    id: 3,
-    name: "Cadbury 5 Star Chocolate",
-    category: "Bakery & Biscuits",
-    image: PRodect3,
-    price: "14",
-    rating: "4",
-
-  },
-  {
-    id: 4,
-    name: "Onion Flavour Potato",
-    category: "Snack & Munchies",
-    image: PRodect4,
-    price: "28",
-    rating: "2",
-
-  },
-];
+import ProductCards from './products/prodects';
+import { Link } from 'react-router-dom';
 
 const drawerWidth = 240;
 const navItems = ['Home', 'About', 'Contact'];
@@ -71,9 +27,19 @@ const navItems = ['Home', 'About', 'Contact'];
 function Applayout(props) {
   const { window } = props;
   const [mobileOpen, setMobileOpen] = React.useState(false);
+  const [anchorEl, setAnchorEl] = React.useState(null);
+  const open = Boolean(anchorEl);
 
   const handleDrawerToggle = () => {
     setMobileOpen((prevState) => !prevState);
+  };
+
+  const handleClick = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleClose = () => {
+    setAnchorEl(null);
   };
 
   const drawer = (
@@ -123,6 +89,33 @@ function Applayout(props) {
                 {item}
               </Button>
             ))}
+            <Button
+              className="text-white"
+              id="basic-button"
+              aria-controls={open ? 'basic-menu' : undefined}
+              aria-haspopup="true"
+              aria-expanded={open ? 'true' : undefined}
+              onClick={handleClick}
+            >
+              <AccountCircleIcon />
+            </Button>
+            <Menu
+              id="basic-menu"
+              anchorEl={anchorEl}
+              open={open}
+              onClose={handleClose}
+              MenuListProps={{
+                'aria-labelledby': 'basic-button',
+              }}
+            >
+              <MenuItem onClick={handleClose}>Profile</MenuItem>
+              <MenuItem onClick={handleClose}>
+              <Link className="text-decoration-none" to="/signin">
+                my account
+              </Link>
+              </MenuItem>
+              <MenuItem onClick={handleClose}>Logout</MenuItem>
+            </Menu>
           </Box>
         </Toolbar>
       </AppBar>
@@ -145,30 +138,13 @@ function Applayout(props) {
       </nav>
       <Box component="main" sx={{ p: 3 }}>
         <Toolbar />
-        <Box className="d-flex gap-3">
-          {prodectData.map((product) => {
-            return (
-              <Card key={product.id} className="p-2">
-                <img src={product.image} alt={product.productName} />
-                <Typography variant="body2">{product.category}</Typography>
-                <Typography variant="body1">{product.productName}</Typography>
-                <Rating name="half-rating-read" defaultValue={3} precision={0.5} readOnly />
-                <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                  <Typography>{product.price}</Typography>
-                  <Button size="small" variant="contained">
-                    <AddIcon />
-                    Add
-                  </Button>
-                </Box>
-              </Card>
-            );
-          })}
-        </Box>
+     
+       
       </Box>
+      <ProductCards />
     </Box>
   );
 }
-
 
 
 export default Applayout;
