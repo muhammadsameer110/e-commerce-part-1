@@ -5,6 +5,8 @@ import Applayout from './components/applayout';
 import Signin from './components/pages/signin/signin'
 import Signup from './components/pages/signup/signup';
 import Products from './products-details/products';
+import { Provider } from 'react-redux';
+import store from '../src/store';
 
 
 
@@ -26,14 +28,15 @@ function App() {
     },
     {
       path: "/products",
-      element : <Products/>,
+      element: <Products />,
     },
   ]);
 
   return (
     <div className="App">
-    
-   <RouterProvider router={router}/>
+      <Provider store={store}>
+        <RouterProvider router={router} />
+      </Provider>
     </div>
   );
 }

@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { useSelector } from 'react-redux'; // Import useSelector from react-redux
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import CssBaseline from '@mui/material/CssBaseline';
@@ -20,6 +21,9 @@ import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import ProductCards from './products/prodects';
 import { Link } from 'react-router-dom';
+import AddShoppingCartIcon from '@mui/icons-material/AddShoppingCart';
+import { Badge } from '@mui/material';
+import CartList from './cart-list/add-to-cart';
 
 const drawerWidth = 240;
 const navItems = ['Home', 'About', 'Contact'];
@@ -29,17 +33,27 @@ function Applayout(props) {
   const [mobileOpen, setMobileOpen] = React.useState(false);
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
+  const [openCartList, setOpenCartList] = React.useState(false);
 
+  const count = useSelector((state) => state.counter); // Correctly use useSelector
+
+  // Toggle for mobile drawer
   const handleDrawerToggle = () => {
     setMobileOpen((prevState) => !prevState);
   };
 
+  // Menu handlers
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
   };
 
   const handleClose = () => {
     setAnchorEl(null);
+  };
+
+  // Toggle Cart List
+  const toggleCartList = (newOpen) => () => {
+    setOpenCartList(newOpen);
   };
 
   const drawer = (
@@ -89,6 +103,9 @@ function Applayout(props) {
                 {item}
               </Button>
             ))}
+            <Badge badgeContent={count} color="success" onClick={toggleCartList(true)} sx={{ cursor: 'pointer' }}>
+              <AddShoppingCartIcon />
+            </Badge>
             <Button
               className="text-white"
               id="basic-button"
@@ -110,9 +127,9 @@ function Applayout(props) {
             >
               <MenuItem onClick={handleClose}>Profile</MenuItem>
               <MenuItem onClick={handleClose}>
-              <Link className="text-decoration-none" to="/signin">
-                my account
-              </Link>
+                <Link className="text-decoration-none" to="/signin">
+                  My Account
+                </Link>
               </MenuItem>
               <MenuItem onClick={handleClose}>Logout</MenuItem>
             </Menu>
@@ -126,7 +143,7 @@ function Applayout(props) {
           open={mobileOpen}
           onClose={handleDrawerToggle}
           ModalProps={{
-            keepMounted: true, // Better open performance on mobile.
+            keepMounted: true,
           }}
           sx={{
             display: { xs: 'block', sm: 'none' },
@@ -138,13 +155,15 @@ function Applayout(props) {
       </nav>
       <Box component="main" sx={{ p: 3 }}>
         <Toolbar />
-     
-       
+        <ProductCards />
       </Box>
-      <ProductCards />
+      <CartList openCartList={openCartList} toggleCartList={toggleCartList} />
     </Box>
   );
 }
 
+Applayout.propTypes = {
+  window: PropTypes.func,
+};
 
 export default Applayout;
